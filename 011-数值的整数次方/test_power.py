@@ -18,6 +18,11 @@ class Test(unittest.TestCase):
         want = 1
         self.assertEqual(got, want)
 
+    def test_base_zero_exponent_negative(self):
+        got = s.Power(0, -2)
+        want = 1
+        self.assertEqual(got, want)
+
     def test_negative(self):
         got = s.Power(2, -3)
         want = 1 / 8
