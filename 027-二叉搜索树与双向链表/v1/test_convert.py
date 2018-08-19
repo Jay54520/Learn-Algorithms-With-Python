@@ -1,0 +1,56 @@
+# -*- coding: utf-8 -*-
+import unittest
+
+from convert import Solution, TreeNode
+
+s = Solution()
+
+root = TreeNode(10)
+left = TreeNode(6)
+right = TreeNode(14)
+left_right = TreeNode(8)
+right_left = TreeNode(12)
+
+root.left = left
+root.right = right
+left.right = left_right
+right.left = right_left
+
+
+class TestMiddleTraverse(unittest.TestCase):
+
+    def test_not_empty(self):
+        got = s.middle_traverse(root)
+        want = [left, left_right, root, right_left, right]
+        self.assertEqual(want, got)
+
+
+class TestConvert(unittest.TestCase):
+
+    def test_empty(self):
+        self.assertEqual(None, s.Convert(None))
+
+    def test_not_empty(self):
+        new_root = s.Convert(root)
+        want_traverse = [6, 8, 10, 12, 14, 6, 8, 10, 12, 14]
+        self.assertEqual(want_traverse, self.traverse_double_linked_list(new_root))
+
+    def traverse_double_linked_list(self, double_linked_list):
+        """先遍历 right，然后遍历 left，忽略 None"""
+        results = []
+        cur_node = double_linked_list
+
+        while cur_node:
+            results.append(cur_node.val)
+            cur_node = cur_node.right
+
+        cur_node = double_linked_list
+        next_node = cur_node.right
+        while cur_node:
+            results.append(cur_node.val)
+
+            cur_node = cur_node.right
+            if not next_node:
+                break
+            next_node = next_node.right
+        return results
