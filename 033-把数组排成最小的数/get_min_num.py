@@ -43,6 +43,18 @@ class Solution:
         空间复杂度：O(n)。由于 Python2 不支持 list.sort() 的 cmp，所以是 O(n)，Python3 支持，所以可以为 O(1)
 
         特殊情况是数组为空。返回 ''。
+
+        证明：
+
+        对于 sorted_numbers，可知：
+
+        * sorted_numbers[0] 与 sorted_numbers[1:] 中的任何一个元素拼接后都是更小的（相比从 [1:] 拼接 [0]）
+        * sorted_numbers[1] 与 sorted_numbers[2:] 中的任何一个元素拼接后都是更小的
+        ...
+
+        所以 sorted_numbers[0] 与 sorted_numbers[1] 拼接后是最小的，将 [0] 与 [1] 拼接并替换[0] 和 [1]，则 sorted_numbers 减少了一个；
+        然后再将 sorted_numbers[0] 与 sorted_numbers[1]，还是最小的，
+        以此类推，全部拼接后也是最小的。
         """
         if not numbers:
             return ''
