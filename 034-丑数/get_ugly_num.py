@@ -39,29 +39,45 @@ class Solution:
         2 * 2, 3 * 1, 5 * 1 -> 1, 2, 3 (1, 1, 0)
         2 * 2, 3 * 2, 5 * 1 -> 1, 2, 3, 4  (2, 1, 0)
 
-        “比较3个数：用于乘2的最小的数、用于乘3的最小的数，用于乘5的最小的”
+        ugly_num = 2(3, 5) * another_ugly_num。因为 ugly_num = 2 ^ x * 3 ^ y * 5 ^ z。
+        这里称它们为 factor_of_2, factor_of_3, factor_of_5。
 
-        不知道如何证明。
+        令 ugly_nums 是从小到大的丑数列表。则后面的丑数为 factors 乘以这个列表。
+
+        下一个丑数是 min(
+            factor_of_2 * 2,
+            factor_of_3 * 3,
+            factor_of_5 * 5
+        )
+
+        根据定义，第一个也是最小的丑数是 1，所以三个 factors 初始为 1。
+        然后根据上述算法获取下一个丑数，然后设置对应的 factor 为下一个丑数。
+        比如 1 后面的丑数是 1 * 2，所以将 factor_of_2 从 1 指向 2。
+
+        如果 product 是下一个丑数，则移动对应的 factor。
+
+        如果多个 products 都等于下一个丑数，那么会同时移动对应的 factors
+        会不会出现丑数重复的情况？
 
         复杂度：
         时间复杂度：O(n)
-        空间复杂度：O(1)
+        空间复杂度：O(n)
         """
         if index < 1:
             return 0
         ugly_nums = [1]
-        x, y, z = 0, 0, 0
+        factor_of_2, factor_of_3, factor_of_5 = 0, 0, 0
         while len(ugly_nums) < index:
-            x_product = 2 * ugly_nums[x]
-            y_product = 3 * ugly_nums[y]
-            z_product = 5 * ugly_nums[z]
-            ugly_num = min(x_product, y_product, z_product)
+            product_of_2 = 2 * ugly_nums[factor_of_2]
+            product_of_3 = 3 * ugly_nums[factor_of_3]
+            product_of_5 = 5 * ugly_nums[factor_of_5]
+            ugly_num = min(product_of_2, product_of_3, product_of_5)
             ugly_nums.append(ugly_num)
-            if ugly_num == x_product:
-                x += 1
-            if ugly_num == y_product:
-                y += 1
-            if ugly_num == z_product:
-                z += 1
+            if ugly_num == product_of_2:
+                factor_of_2 += 1
+            if ugly_num == product_of_3:
+                factor_of_3 += 1
+            if ugly_num == product_of_5:
+                factor_of_5 += 1
 
         return ugly_nums[index - 1]
