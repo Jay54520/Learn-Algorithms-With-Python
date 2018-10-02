@@ -19,7 +19,7 @@ class Solution:
 
         复杂度分析：
         时间复杂度：O(n)
-        空间复杂度：O(n)
+        空间复杂度：O(1)。由于字母是有限个(256)的，所以为 O(1)
         """
         char_times = OrderedDict()
         for index, char in enumerate(s):
