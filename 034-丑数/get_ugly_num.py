@@ -34,7 +34,7 @@ class Solution:
 
         参考 https://www.nowcoder.com/questionTerminal/6aa9e04fc3794f68acf8778237ba065b #青儿
 
-        令 ugly_nums 是从小到大的丑数列表。根据题意，ugly_nums 初始为 [1]。
+        令 ugly_nums 是从小到大的不重复丑数列表。根据题意，ugly_nums 初始为 [1]。
         由于丑数的质因子是 2、3、5，所以 ugly_nums 中的任意丑数（除了第一个），一定等于
         之前的某一个丑数乘以 2 或 3 或 5。
 
@@ -60,7 +60,9 @@ class Solution:
 
         min(2*5, 3*4, 5*2)，ugly_nums = [1,2,3,4,5,6, 8, 9], factor_of_2 和 factor_of_5 都要右移。
 
-        截止目前，相等的丑数都是在同一轮次出现。这是不是普遍的？如何证明？
+        截止目前，相等的丑数都是在同一轮次出现。如果相等的丑数不在一轮中出现，那么对于这个丑数，必然会
+        两次加入 ugly_nums，和假设 ugly_nums 是从小到大的不重复丑数列表冲突，所以不成立。所以相等
+        的丑数一定会在同一轮中出现。
 
         复杂度：
         时间复杂度：O(n)
