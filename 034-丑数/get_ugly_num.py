@@ -34,30 +34,33 @@ class Solution:
 
         参考 https://www.nowcoder.com/questionTerminal/6aa9e04fc3794f68acf8778237ba065b #青儿
 
-        1 (0, 0, 0)
-        2 * 1, 3 * 1, 5 * 1 -> 1, 2 (1, 0, 0)
-        2 * 2, 3 * 1, 5 * 1 -> 1, 2, 3 (1, 1, 0)
-        2 * 2, 3 * 2, 5 * 1 -> 1, 2, 3, 4  (2, 1, 0)
+        令 ugly_nums 是从小到大的丑数列表。根据题意，ugly_nums 初始为 [1]。
+        由于丑数的质因子是 2、3、5，所以 ugly_nums 中的任意丑数（除了第一个），一定等于
+        之前的某一个丑数乘以 2 或 3 或 5。
 
-        ugly_num = 2(3, 5) * another_ugly_num。因为 ugly_num = 2 ^ x * 3 ^ y * 5 ^ z。
-        这里称它们为 factor_of_2, factor_of_3, factor_of_5。
+        第一个丑数是 1，第二个丑数只能是 min(2*1, 3*1, 5*1, 2*2, 3*2, 5*2)，所以是 2，这时 ugly_nums = [1, 2]。由于这时
+        2 已经加入了ugly_nums，所以为了避免重复，将 factor_of_2 指向下一个丑数，也就是 2。
 
-        令 ugly_nums 是从小到大的丑数列表。则后面的丑数为 factors 乘以这个列表。
+        第三个丑数可能是min(2*2, 3*1, 5*1, 3*2, 5*2)，丑数只会出现在前三种情况中，因为前三种
+        情况是 (2 * factor_of_2, 3 * factor_of_3, 5 * factor_of_5)，而这些 factors 都是
+        各自对应的最小 factor。 下一个丑数是 3，这时 ugly_nums = [1, 2, 3]，
+        由于 3 已经加入了 ugly_nums，所以将 factor_of_3 指向 1 的下一个丑数，还是 2。
 
-        下一个丑数是 min(
-            factor_of_2 * 2,
-            factor_of_3 * 3,
-            factor_of_5 * 5
-        )
+        第四个丑数可能是min(2*2, 3*2, 5*1)，所以是 4，这时 ugly_nums = [1, 2, 3, 4]，
+        由于 3 已经加入了 ugly_nums，所以将 factor_of_2 指向 factor_of_2 的下一个丑数，是 3。
 
-        根据定义，第一个也是最小的丑数是 1，所以三个 factors 初始为 1。
-        然后根据上述算法获取下一个丑数，然后设置对应的 factor 为下一个丑数。
-        比如 1 后面的丑数是 1 * 2，所以将 factor_of_2 从 1 指向 2。
+        min(2*3, 3*2, 5*1)，ugly_nums = [1,2,3,4,5], factor_of_5 指向 2
 
-        如果 product 是下一个丑数，则移动对应的 factor。
+        min(2*3, 3*2, 5*2)，ugly_nums = [1,2,3,4,5,6], factor_of_2 和 factor_of_3 都要
+        右移。
 
-        如果多个 products 都等于下一个丑数，那么会同时移动对应的 factors
-        会不会出现丑数重复的情况？
+        min(2*4, 3*3, 5*2)，ugly_nums = [1,2,3,4,5,6, 8], factor_of_2 右移。
+
+        min(2*5, 3*3, 5*2)，ugly_nums = [1,2,3,4,5,6, 8, 9], factor_of_3 右移。
+
+        min(2*5, 3*4, 5*2)，ugly_nums = [1,2,3,4,5,6, 8, 9], factor_of_2 和 factor_of_5 都要右移。
+
+        截止目前，相等的丑数都是在同一轮次出现。这是不是普遍的？如何证明？
 
         复杂度：
         时间复杂度：O(n)
