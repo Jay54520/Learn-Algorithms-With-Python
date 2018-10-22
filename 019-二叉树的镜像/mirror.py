@@ -56,9 +56,7 @@ class Solution:
             return root
 
         # ---------- 交换根节点的左右子树 ------------
-        left = root.left
-        root.left = root.right
-        root.right = left
+        root.left, root.right = root.right, root.left
         # ---------- 交换根节点的左右子树 ------------
 
         self.Mirror(root.left)
