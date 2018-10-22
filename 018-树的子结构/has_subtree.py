@@ -53,42 +53,40 @@ class Solution:
 
         if self.current_tree_has_subtree(root1, root2):
             return True
-        if root1:
-            if self.HasSubtree(root1.left, root2):
-                return True
-        if root1:
-            if self.HasSubtree(root1.right, root2):
-                return True
+        if self.HasSubtree(root1.left, root2):
+            return True
+        if self.HasSubtree(root1.right, root2):
+            return True
         return False
 
-    def current_tree_has_subtree(self, root1, root2):
+    def current_tree_has_subtree(self, parent, sub):
         """
-        root2 是否是当前 root1 的子树。
+        sub 是否是当前 parent 的子树。
 
-        循环条件：都不为空，两者根节点的值要相等，并且 root2 对应的子树也必须是 root1 对应子树的子树。
+        循环条件：都不为空，两者根节点的值要相等，并且 sub 对应的子树也必须是 parent 对应子树的子树。
 
-        终止条件： root1 或 root2 为空。
+        终止条件： parent 或 sub 为空。
         如果都为空，返回 True；
         否则：
-            如果只有 root2 为空，返回 True，说明在这里 root2 已经比完了；
-            只有 root1 为空，返回 False，说明这里 root1 比 root2 少；
+            如果只有 sub 为空，返回 True，说明在这里 sub 已经比完了；
+            只有 parent 为空，返回 False，说明这里 parent 比 sub 少；
 
-        :param root1:
-        :param root2:
+        :param parent:
+        :param sub:
         :return:
         """
-        if root1 and root2:
-            if root1.val != root2.val:
+        if parent and sub:
+            if parent.val != sub.val:
                 return False
-            if not self.current_tree_has_subtree(root1.left, root2.left):
+            if not self.current_tree_has_subtree(parent.left, sub.left):
                 return False
-            if not self.current_tree_has_subtree(root1.right, root2.right):
+            if not self.current_tree_has_subtree(parent.right, sub.right):
                 return False
         else:
-            if not root1 and not root2:
+            if not parent and not sub:
                 return True
-            if root1 and not root2:
+            if parent and not sub:
                 return True
-            if not root1 and root2:
+            if not parent and sub:
                 return False
         return True
