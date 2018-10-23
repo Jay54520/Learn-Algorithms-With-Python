@@ -12,8 +12,7 @@ class Solution:
 
     算法2：
 
-    维持两个栈，一个正常栈，一个最小栈。最小栈的对应位置是正常栈那时候的最小值，最小栈和正常栈
-    在 push 或 pop 时同时变化。
+    维持两个栈，一个正常栈，一个最小栈。最小栈对应正常栈在当前状态的最小值。
 
     push：
     如果栈为空，那么直接将元素放入两个栈中；
@@ -34,25 +33,22 @@ class Solution:
     """
 
     def __init__(self):
-        self.stack = []
+        self.normal_stack = []
         self.min_stack = []
 
     def push(self, node):
-        if not self.stack:
-            self.min_stack.append(node)
+        if self.min_stack:
+            self.min_stack.append(min(node, self.min_stack[-1]))
         else:
-            min_value = self.min()
-            if node < min_value:
-                min_value = node
-            self.min_stack.append(min_value)
-        self.stack.append(node)
+            self.min_stack.append(node)
+        self.normal_stack.append(node)
 
     def pop(self):
         self.min_stack.pop()
-        return self.stack.pop()
+        return self.normal_stack.pop()
 
     def top(self):
-        return self.stack[-1]
+        return self.normal_stack[-1]
 
     def min(self):
         return self.min_stack[-1]
