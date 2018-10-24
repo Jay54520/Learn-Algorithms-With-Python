@@ -1,9 +1,5 @@
 # -*- coding:utf-8 -*-
 
-YES = True
-NO = False
-
-
 class Solution:
 
     def VerifySquenceOfBST(self, sequence):
@@ -53,15 +49,9 @@ class Solution:
         算法与分析：
 
         * 为空，返回 False（根据题意）
-        * 非空，根据二叉搜索树的定义，如果非空，那么最后一个值是根节点的值，由于这里不需要返回节点，所以这里认为根节点
-        和根节点的值是相同的意思。
-            * 只有根节点，返回 Yes
-            * 只有左子树，之前的值都小于根节点，然后左子树及其子树也要是二叉搜索树
-            * 只有右子树，之前的值都大于根节点，然后右子树及其子树也要是二叉搜索树
-            * 有左右子树，如 [1, 6, 3, 14, 10, 8]，第一个大于根节点的是根节点的右孩子，
-            它前面的是左子树，它以及它后面（到根节点之前）的是右子树。
-
-            如果根节点的左右后代违反了上述二叉搜索树的 1, 2 定义，返回 No。
+        * 非空，分离出左子树数组、右子树数组、根节点，第一个大于根节点的是节点是右子树根节点，右子树根节点之前的所有节点是左子树：
+            * 根节点应该大于左子树所有节点，小于右子树所有节点，如果对应的子树存在
+            * 左右子树也要是二叉搜索树，如果对应的子树存在
 
         复杂度分析：
 
@@ -82,53 +72,28 @@ class Solution:
         """
         length = len(sequence)
         if length == 0:
-            return NO
+            return False
         elif length == 1:
-            return YES
+            return True
 
-        root = sequence[-1]
-
-        first_right_index = None
-        for index, value in enumerate(sequence[:-1]):
-            if value > root:
-                first_right_index = index
+        left_sub = []
+        right_sub = []
+        root_val = sequence[-1]
+        for index, node in enumerate(sequence[:-1]):
+            if node > root_val:
+                left_sub = sequence[:index]
+                right_sub = sequence[index:-1]
                 break
-
-        # 说明没有右子树
-        # 不要写 if not，而要明确无歧义地进行比较，因为 0 会导致 if not 不符合预期
-        if first_right_index is None:
-            left_sequence = sequence[:-1]
-            try:
-                self.check_left_sequence(root, left_sequence)
-            except ValueError:
-                return NO
-            return self.VerifySquenceOfBST(sequence[:-1])
-        else:
-            right_sequence = sequence[first_right_index:-1]
-            try:
-                self.check_right_sequence(root, right_sequence)
-            except ValueError:
-                return NO
-
-            if first_right_index > 0:
-                left_sequence = sequence[:first_right_index]
-                try:
-                    self.check_right_sequence(root, right_sequence)
-                except ValueError:
-                    return NO
-                else:
-                    return self.VerifySquenceOfBST(left_sequence) and self.VerifySquenceOfBST(right_sequence)
-            else:
-                return self.VerifySquenceOfBST(right_sequence)
-
-    def check_right_sequence(self, root, right_sequence):
-        """右子树上所有节点的值均应大于它的根节点的值"""
-        for value in right_sequence:
-            if value < root:
-                raise ValueError('右子树上的 {} 小于根节点 {}'.format(value, root))
-
-    def check_left_sequence(self, root, left_sequence):
-        """左子树上所有节点的值均应小于它的根节点的值"""
-        for value in left_sequence:
-            if value > root:
-                raise ValueError('左子树上的 {} 大于根节点 {}'.format(value, root))
+        if left_sub:
+            for n in left_sub:
+                if not n < root_val:
+                    return False
+            if not self.VerifySquenceOfBST(left_sub):
+                return False
+        if right_sub:
+            for n in right_sub:
+                if not root_val < n:
+                    return False
+            if not self.VerifySquenceOfBST(right_sub):
+                return False
+        return True
