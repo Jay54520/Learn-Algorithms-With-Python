@@ -29,14 +29,15 @@ class Solution:
 
         按照上面的思路，将新节点插入到旧节点后面，比如：
 
-        org_n1 -> new_n1 -> org_n2 -> new_n2 -> org_n3 -> new_n3
+        old_n1 -> new_n1 -> old_n2 -> new_n2 -> old_n3 -> new_n3
 
         则新旧节点的关系为：
 
-        1. new_n = org_n.next
+        1. new_n = old_n.next
         2. 根据上面可以推断出：
-            如果 new_n.random 不为 None: new_n.random = org_n.random.next;
-            否则，org_n.random = None
+            如果 new_n.random 不为 None: new_n.random = old_n.random.next。假设
+            old_n.random = old_random，则 old_random.next = new_random。
+            否则，当 new_n.random 为 None 时，old_n.random 也为 None
 
         根据第 2 点设置好新链表的 random，然后拆分得到完整的新链表：
 
@@ -44,7 +45,7 @@ class Solution:
 
             * 新链表的头是第二个节点
             * new_n.next 是当前链表的 next.next
-            * 终止条件是 org_cur 为 None
+            * 终止条件是 old_cur 为 None
 
         拆分：
             拆分出新、旧链表。拆分出旧链表的原因是尽量不要改变函数的输入，并且
@@ -67,26 +68,26 @@ class Solution:
             return None
 
         # ------------插入新节点------------
-        org_cur = pHead  # type: RandomListNode
-        while org_cur:
-            new_node = RandomListNode(org_cur.label)
-            next = org_cur.next
-            org_cur.next = new_node
+        old_cur = pHead  # type: RandomListNode
+        while old_cur:
+            new_node = RandomListNode(old_cur.label)
+            next = old_cur.next
+            old_cur.next = new_node
             new_node.next = next
-            org_cur = next
+            old_cur = next
         # ------------插入新节点------------
 
         # ------------设置新链表的 random------------        
-        org_cur = pHead  # type: RandomListNode
-        while org_cur:
-            new_node = org_cur.next
-            old_random = org_cur.random
+        old_cur = pHead  # type: RandomListNode
+        while old_cur:
+            new_node = old_cur.next
+            old_random = old_cur.random
             if old_random:
                 new_random = old_random.next
             else:
                 new_random = None
             new_node.random = new_random
-            org_cur = new_node.next
+            old_cur = new_node.next
         # ------------设置新链表的 random------------
 
         # ------------拆分得到新链表------------
