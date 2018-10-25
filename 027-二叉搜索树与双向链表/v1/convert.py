@@ -8,6 +8,9 @@ class TreeNode:
 
 class Solution:
 
+    def __init__(self):
+        self.traverse_results = []
+
     def Convert(self, pRootOfTree):
         """
         输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
@@ -41,19 +44,12 @@ class Solution:
 
         根据二叉搜索树的定义，根节点大于左子树，小于右子树，所以 3 成立。
 
-        一直按上面的方式递归左子树，最后一定能得到这样的树：
-
-        root
-        |          \
-        left_leaf  right_leaf
-
-        左右节点可能为空。这时，这棵树的中序遍历满足从小到大的顺序。然后
-        递归往上，左子树的中序遍历满足从小到大的顺序。右子树同理，证明完成。
+        由于左右子树也是二叉搜索树，所以 1、2 成立。
 
         复杂度分析
 
         时间复杂度：遍历 O(n)、生成链表 O(n)，所以为 O(n)
-        空间复杂度：O(n)，用于储存遍历结果
+        空间复杂度：O(1)，遍历结果并没有创建新的对象，只是增加了引用计数，所以为 O(1)
 
         总结
 
@@ -67,34 +63,17 @@ class Solution:
         if not pRootOfTree:
             return None
 
-        middle_traverse_results = self.middle_traverse(pRootOfTree)
-
-        for index, node in enumerate(middle_traverse_results):
-            if index == len(middle_traverse_results) - 1:
-                break
-
-            cur_node = node
-            next_node = middle_traverse_results[index + 1]
-            if index == 0:
-                pRootOfTree = cur_node
-                cur_node.left = None
-
+        self.middle_traverse(pRootOfTree)
+        for index in range(len(self.traverse_results) - 1):
+            cur_node = self.traverse_results[index]
+            next_node = self.traverse_results[index + 1]
             cur_node.right = next_node
             next_node.left = cur_node
-        return pRootOfTree
+        return self.traverse_results[0]
 
     def middle_traverse(self, pRootOfTree):
-        """返回中序遍历的节点列表，pRootOfTree 不会为空"""
-        results = []
-        self._middle_traverse(pRootOfTree.left, results)
-        results.append(pRootOfTree)
-        self._middle_traverse(pRootOfTree.right, results)
-        return results
-
-    def _middle_traverse(self, pRootOfTree, results):
         if not pRootOfTree:
             return
-
-        self._middle_traverse(pRootOfTree.left, results)
-        results.append(pRootOfTree)
-        self._middle_traverse(pRootOfTree.right, results)
+        self.middle_traverse(pRootOfTree.left)
+        self.traverse_results.append(pRootOfTree)
+        self.middle_traverse(pRootOfTree.right)

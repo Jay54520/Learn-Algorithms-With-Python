@@ -71,15 +71,11 @@ class Solution:
         return pRootOfTree
 
     def get_max_left(self, converted_left):
-        max_left = converted_left
         while converted_left.right:
-            max_left = converted_left.right
             converted_left = converted_left.right
-        return max_left
+        return converted_left
 
     def get_min_right(self, converted_right):
-        min_right = converted_right
         while converted_right.left:
-            min_right = converted_right.left
             converted_right = converted_right.left
-        return min_right
+        return converted_right
