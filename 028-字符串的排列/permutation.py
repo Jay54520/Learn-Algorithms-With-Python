@@ -20,7 +20,7 @@ class Solution:
 
         推导出递归的写法为：
 
-        终止条件：只有一个字符，将其添加到 tmp_result，然后添加到 results 中；
+        终止条件：只有一个字符，将其添加到 tmp_result，然后添加到 results 中如果 results 没有这个结果；
         循环：遍历输入字符串，将当前字符加入 tmp_result，然后求 tmp_result 与
         其他字符的全排列。每次求完后要恢复 tmp_result，避免上次的影响这次的结果。
 
@@ -56,8 +56,9 @@ class Solution:
             if result not in results:
                 results.append(result)
         else:
-            length = len(tmp_result)
+            original_tmp_length = len(tmp_result)
             for index, s in enumerate(ss):
-                tmp_result = tmp_result[:length] + [s]
+                tmp_result = tmp_result[:original_tmp_length] + [s]
+                # ss[:index] + ss[index+1:] 指除 index 之外的字符串
                 self.permutation(ss[:index] + ss[index+1:], tmp_result, results)
 
