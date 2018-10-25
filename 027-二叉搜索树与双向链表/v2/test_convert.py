@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from convert import Solution, TreeNode
+from .convert import Solution, TreeNode
 
 s = Solution()
 
