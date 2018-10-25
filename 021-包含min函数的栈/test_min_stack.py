@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from min_stack import Solution
+from .min_stack import Solution
 
 s = Solution()
 
@@ -27,7 +27,7 @@ class Test(unittest.TestCase):
         self._push()
         self.assertEqual(
             self.nodes,
-            s.stack,
+            s.normal_stack,
         )
         self.assertEqual(
             [3, 3, 2, 2, 2, 2, 2, 0],
