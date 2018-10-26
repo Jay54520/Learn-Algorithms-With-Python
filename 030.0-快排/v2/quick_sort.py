@@ -2,7 +2,7 @@
 
 """
 * 终止条件：数组长度小于 1，则是有序的，不需要进行任何操作，直接返回
-* 循环：使当前数组变为 [<pivot, pivot, >=pivot] 的数组，然后对 pivot 两边的数组进行快排。
+* 循环：使当前数组变为 [<pivot, 等于 pivot, >pivot] 的数组，然后对 pivot 两边的数组进行快排。
 使用索引区分数组范围。
 
 复杂度：
@@ -18,7 +18,14 @@ def quick_sort(a_list):
     if len(a_list) > 1:
         # 注意所有的返回 list 类型
         pivot = a_list[0]
-        return quick_sort([x for x in a_list if x < pivot]) + \
-               [pivot] + quick_sort([x for x in a_list if x > pivot])
+        less, equal, greater = [], [], []
+        for x in a_list:
+            if x < pivot:
+                less.append(x)
+            elif x == pivot:
+                equal.append(x)
+            else:
+                greater.append(x)
+        return quick_sort(less) + equal + quick_sort(greater)
     else:
         return a_list
