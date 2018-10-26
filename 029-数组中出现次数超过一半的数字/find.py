@@ -32,49 +32,30 @@ class Solution:
 
         算法3：
 
-        假如这个数字存在，那么这个数字与其他数字抵消后，最后剩下的一定是这个
-        数字。是充分不必要条件。因为 [1, 2, 1, 2, 3] 中的 3 也满足这个条件
-        但不是超过一半的数字。所以再遍历一次数组，统计剩下的数字出现次数，然后
-        判断是否满足要求。
+        假设这样的数字存在，那么进行抵消后剩下的数字就会是它；
+        如果这样的数字不存在，进行抵消后也可能会剩下数字。比如 [1, 2, 1, 2, 3]
+
+        所以抵消后，如果没有剩下数字，返回 0；
+        如果剩下数字，统计该数字的出现次数，如果大于一半，返回它；否则，返回 0。
 
         时间复杂度：O(n)
         空间复杂度：O(1)
-
-        抵消算法
-
-        遍历数组，将第一个数字加入次数字典中，次数为 1。如果后一个是相同的数字，
-        那么给次数加一，否则减一。如果次数为 0，则将其移除数组。
         """
-        times = self.generate_times(numbers)
-        if not times:
-            return 0
-        number = times.keys()[0]
-        half_length = len(numbers) // 2
-        number_count = self.count_number(number, numbers)
-        if number_count > half_length:
-            return number
-        else:
-            return 0
-
-    def generate_times(self, numbers):
-        """根据 numbers 生成次数字典"""
+        res = 0
         times = {}
-        for number in numbers:
-            if not times:
-                times[number] = 1
-            else:
-                if number in times:
-                    times[number] += 1
-                else:
-                    key = times.keys()[0]
-                    times[key] -= 1
-                    if times[key] == 0:
-                        del times[key]
-        return times
-
-    def count_number(self, number, numbers):
-        number_count = 0
         for n in numbers:
-            if n == number:
-                number_count += 1
-        return number_count
+            if times:
+                original_key = list(times.keys())[0]
+                if n == original_key:
+                    times[original_key] += 1
+                else:
+                    times[original_key] -= 1
+                    if times[original_key] == 0:
+                        del times[original_key]
+            else:
+                times[n] = 1
+        if times:
+            tmp_res = list(times.keys())[0]
+            if numbers.count(tmp_res) > len(numbers) // 2:
+                res = tmp_res
+        return res
