@@ -13,7 +13,8 @@ class Solution:
         在 Partition 算法中，如果 pivot_index 大于 k - 1，那么说明目标在 pivot_index 左边；
         否则，目标在 pivot_index 右边。
 
-        时间复杂度：O(n)
+        最差时间复杂度：O(n^2)，partition 退化为冒泡排序
+        平均时间复杂度：O(nlogn)
         空间复杂度：O(1)
 
         缺点：
