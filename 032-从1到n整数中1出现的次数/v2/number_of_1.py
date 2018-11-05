@@ -14,54 +14,40 @@ class Solution:
 
         算法3：
 
-        原书上的，算法2是根据数字含有 1 的个数划分为 n 种情况。这里将分为：
+        https://www.nowcoder.com/questionTerminal/bd7f978302044eee894445e244c7eee6 藍裙子的百合魂
 
-        1 出现在第一位、第二位 ... 第 logn + 1 位。
+        设N = abcde ,其中abcde分别为十进制中各位上的数字，则含有 1 的形式为 [][]1[][]。
+        如果要计算百位上1出现的次数，它要受到3方面的影响：百位上的数字，百位以下（低位）的数字，百位以上（高位）的数字。
+        ① 如果百位上数字为0，百位上可能出现1的次数由更高位决定。比如：12013，
+        个为和十位都可以为 0~9，所以一共有 10 * 10 = 100 种情况。
+        万位和千位，从 00~11（因为百位上的数字为 0 小于 1，所以最大为 11） 有 12 种情况，所以一共有 12 * 100 = 1200 种情况。
 
-        对于 21345：
+        ② 如果百位上数字为1，百位上可能出现1的次数不仅受更高位影响还受低位影响。比如：12113，
+        在 ① 的 1200 基础上，加上 12100~12113 这 114（低位数字 113 + 1） 种情况。
 
-        1 在第一位：10000 - 19999，为 19999 - 10000 + 1 = 10000 个
-        1 其他位：选择一位为 1，其他位可以是 0 - 9 有 10 种情况，
+        ③ 如果百位上数字大于1（2~9），则百位上出现1的情况仅由更高位决定，比如12213，
+        个为和十位都可以为 0~9，所以一共有 10 * 10 = 100 种情况。
+        万位和千位，从 00~12，有 13 种情况，所以一共有 13 * 100 = 1300 种。
 
-        看不懂，于是去牛客网上找其他解释。
-
-        算法4：
-
-        来自 https://www.nowcoder.com/questionTerminal/bd7f978302044eee894445e244c7eee6 #moluchase 的回答
-
-        1. 令n的第一位为f，n的其余位为l；（如n=123，则f=1，l=23；n=234，则 f = 2, l = 34）
-        2. 如果f大于1，表明n包含了最高位为1的全部情况（比如n=223，f=2；n的最高位包含了[100, 200)共100个数；
-        类似的，当n的位数为4时，为 [1000, 2000)，有1000种情况，所以对于 m 位数，如果 f > 1，那么最高位为 1 的情况有 10 ^ (m-1) 种）；
-        3. 如果f等于1，比如n=123，f=1；说明n包含了[100, 123]这24次最高位为1的情况，即l+1；
-        4. 然后去除 f，剩下 l，对 l 使用同样的算法求出 1 的次数。
-
-        对于 13，使用上述算法：
-
-        * f 等于 1，属于首位为 1 的情况，所以有 l + 1 = 3 + 1 = 4种
-        * l 等于 3，大于 1，所以为 10 ^ (1 - 1) = 1 种
-        * 一共有 4 + 1 = 5，与题意的 6 不符，原因是少算了 11 的个位数的 1。
+        复杂度分析：
+        时间复杂度：O(logn)，只需要循环 logn 次且每次循环中都是常数级运算。
+        空间复杂度：O(1)
 
         边界情况：
 
-        * n = 0，返回 0
+        * n <= 0，返回 0
         """
-        total = 0
-        if n <= 0:
-            return total
-        digit = int(math.log10(n)) + 1
-        for number_of_1 in range(1, digit + 1):
-            total += number_of_1 * self.permutations(digit, number_of_1) * (9 ** (digit - number_of_1))
-
-        for greater_num in range(n + 1, 10 ** digit):
-            total -= str(greater_num).count('1')
-        return total
-
-    def permutations(self, n, k):
-        """
-        返回 C(n, k)，等于 n! / ((n - k)! * k!)
-        根据https://en.wikipedia.org/wiki/Permutation
-        :param n:
-        :param k:
-        :return:
-        """
-        return math.factorial(n) / (math.factorial(n - k) * math.factorial(k))
+        count = 0
+        i = 1
+        while n // i != 0:
+            current = (n // i) % 10
+            before = (n // i) // 10
+            after = n - n // i * i
+            if current == 0:
+                count += before * i
+            elif current == 1:
+                count += before * i + after + 1
+            else:
+                count += (before + 1) * i
+            i *= 10
+        return count
