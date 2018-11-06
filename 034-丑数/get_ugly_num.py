@@ -5,7 +5,7 @@ class Solution:
         把只包含质因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含质因子7。
         习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
 
-        质因子：如果一个数 m 能整除给定的正整数 n，并且 m 是指数，那么 m 是 n 的质因子
+        质因子：如果一个数 m 能整除给定的正整数 n（n % m == 0），并且 m 是质数，那么 m 是 n 的质因子
         质数：在大于1的自然数中，除了1和它本身不再有其他因数
         因数：整数a除以整数b(b≠0) 的商正好是整数而没有余数，我们就说b是a的因数。0不是0的因数
 
@@ -38,20 +38,23 @@ class Solution:
         由于丑数的质因子是 2、3、5，所以 ugly_nums 中的任意丑数（除了第一个），一定等于
         之前的某一个丑数乘以 2 或 3 或 5。
 
-        第一个丑数是 1，第二个丑数只能是 min(2*1, 3*1, 5*1, 2*2, 3*2, 5*2)，所以是 2，这时 ugly_nums = [1, 2]。由于这时
-        2 已经加入了ugly_nums，所以为了避免重复，将 factor_of_2 指向下一个丑数，也就是 2。
+        初始化，factor_of_2, factor_of_3, factor_of_5 都指向第一个丑数。
 
-        第三个丑数可能是min(2*2, 3*1, 5*1, 3*2, 5*2)，丑数只会出现在前三种情况中，因为前三种
-        情况是 (2 * factor_of_2, 3 * factor_of_3, 5 * factor_of_5)，而这些 factors 都是
-        各自对应的最小 factor。 下一个丑数是 3，这时 ugly_nums = [1, 2, 3]，
-        由于 3 已经加入了 ugly_nums，所以将 factor_of_3 指向 1 的下一个丑数，还是 2。
+        由于第一个丑数是 1，所以第二个丑数是 min(2*1, 3*1, 5*1)，所以是 2，这时 ugly_nums = [1, 2]。
+        将 factor_of_2 指向下一个丑数，从 1 指向 2。
+        丑数只会出现在前三种情况中，因为前三种
+        情况是 (2 * factor_of_2, 3 * factor_of_3, 5 * factor_of_5)，而这些 factors 都是 2、3、5
+        各自对应的最小 factor。 factor 的意思是因数。
 
-        第四个丑数可能是min(2*2, 3*2, 5*1)，所以是 4，这时 ugly_nums = [1, 2, 3, 4]，
-        由于 3 已经加入了 ugly_nums，所以将 factor_of_2 指向 factor_of_2 的下一个丑数，是 3。
+        第三个丑数是min(2*2, 3*1, 5*1)，下一个丑数是 3，这时 ugly_nums = [1, 2, 3]，
+        将 factor_of_2 指向下一个丑数，从 1 指向 2。
+
+        第四个丑数是min(2*2, 3*2, 5*1)，所以是 4，这时 ugly_nums = [1, 2, 3, 4]，
+        将 factor_of_2 指向 factor_of_2 的下一个丑数是 3。
 
         min(2*3, 3*2, 5*1)，ugly_nums = [1,2,3,4,5], factor_of_5 指向 2
 
-        min(2*3, 3*2, 5*2)，ugly_nums = [1,2,3,4,5,6], factor_of_2 和 factor_of_3 都要
+        min(2*3, 3*2, 5*2)，ugly_nums = [1,2,3,4,5,6], 注意这里两个 factors 都右移了，factor_of_2 和 factor_of_3 都要
         右移。
 
         min(2*4, 3*3, 5*2)，ugly_nums = [1,2,3,4,5,6, 8], factor_of_2 右移。
@@ -61,7 +64,7 @@ class Solution:
         min(2*5, 3*4, 5*2)，ugly_nums = [1,2,3,4,5,6, 8, 9], factor_of_2 和 factor_of_5 都要右移。
 
         截止目前，相等的丑数都是在同一轮次出现。如果相等的丑数不在一轮中出现，那么对于这个丑数，必然会
-        两次加入 ugly_nums，和假设 ugly_nums 是从小到大的不重复丑数列表冲突，所以不成立。所以相等
+        两次加入 ugly_nums，和假设的 ugly_nums 是从小到大的不重复丑数列表冲突，所以不成立。所以相等
         的丑数一定会在同一轮中出现。
 
         复杂度：
@@ -80,6 +83,7 @@ class Solution:
             ugly_nums.append(ugly_num)
             if ugly_num == product_of_2:
                 factor_of_2 += 1
+            # 这里不能使用 elif，因为可能会存在相等的情况
             if ugly_num == product_of_3:
                 factor_of_3 += 1
             if ugly_num == product_of_5:
