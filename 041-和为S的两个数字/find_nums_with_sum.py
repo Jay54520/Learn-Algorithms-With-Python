@@ -11,23 +11,28 @@ class Solution:
         则 x * y = (C-d)(C+d)/4=(C^2-d^2)/4 = 一个常数 - d^2/4，所以 d 越大，x * y 越小。
 
         设两个头尾两个指针i和j，
-        如果 i >= j，说明没有找到，返回空
-        如果 ai + aj == sum，则答案就是这两个
-        如果 ai + aj > sum，将 j 向前移动。不能将 i 向前移动，
-            1. 如果 i 是第一个位置（数组边界），显然不能向前移动
-            2. 如果 i 不是第一个位置，那么说明经历过了下面的情况，而下面的情况是不符合要求的
-        否则，ai + aj < sum，将 i 向后移动。j 不能向后移动：
-            1. 如果 j 是最后一个位置（数组边界），显然不能向后移动
-            2. 如果 j 不是第一个位置，那么说明经历过了上面的情况，而上面的情况是不符合要求的
+        如果 left >= right，说明没有找到，返回空
+        如果 a[left] + a[right] == sum，则答案就是这两个
+
+        我们设定 left 只能向后移动，right 只能向前移动。
+        如果 a[left] + a[right] > sum，将 right 向前移动：
+            1. 如果 left 是第一个位置（数组边界），显然不能向前移动，与假设符合
+            2. 如果 left 不是第一个位置，根据假设，a[left-1] + a[right] < sum，因为只有这种情况 left 才会向后移动。
+            所以 left 不能向前移动，只有 right 才能向前移动
+
+        否则，a[left] + a[right] < sum，将 left 向后移动：
+            1. 如果 right 是最后一个位置（数组边界），显然不能向后移动
+            2. 如果 right 不是第一个位置，根据假设 a[left] + a[right+1] > sum，因为只有这种情况 right 才会向前移动。
+            所以 right 不能向后移动，只有 left 才能向后移动
         """
-        i = 0
-        j = len(array) - 1
-        while i < j:
-            current_sum = array[i] + array[j]
+        left = 0
+        right = len(array) - 1
+        while left < right:
+            current_sum = array[left] + array[right]
             if current_sum == tsum:
-                return [array[i], array[j]]
+                return [array[left], array[right]]
             elif current_sum > tsum:
-                j -= 1
+                right -= 1
             else:
-                i += 1
+                left += 1
         return []
