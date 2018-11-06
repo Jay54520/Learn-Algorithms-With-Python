@@ -38,8 +38,8 @@ class Solution:
         k_index = self.binary_search(0, len(data) - 1)
         if k_index is None:
             return 0
-        first_k = self.find_first_k(0, k_index - 1, k_index)
-        last_k = self.find_last_k(k_index + 1, len(data) - 1, k_index)
+        first_k = self.find_first_k(0, k_index)
+        last_k = self.find_last_k(len(self.data) - 1, k_index)
         return last_k - first_k + 1
 
     def binary_search(self, start, end):
@@ -59,14 +59,14 @@ class Solution:
         else:
             return self.binary_search(mid + 1, end)
 
-    def find_first_k(self, start, end, original_k_index):
-        k_index = self.binary_search(start, end)
-        if k_index is None:
-            return original_k_index
-        return self.find_first_k(start, k_index - 1, k_index)
+    def find_first_k(self, first_index, k_index):
+        before_k_index = self.binary_search(first_index, k_index - 1)
+        if before_k_index is None:
+            return k_index
+        return self.find_first_k(first_index, before_k_index)
 
-    def find_last_k(self, start, end, original_k_index):
-        k_index = self.binary_search(start, end)
-        if k_index is None:
-            return original_k_index
-        return self.find_last_k(k_index + 1, end, k_index)
+    def find_last_k(self, last_index, k_index):
+        after_k_index = self.binary_search(k_index + 1, last_index)
+        if after_k_index is None:
+            return k_index
+        return self.find_last_k(last_index, after_k_index)
