@@ -21,11 +21,12 @@ class Solution:
         空间复杂度：O(1)
 
         算法2：
+        公共节点是两个链表第一个相同的节点。
         将第一个链表的节点放到字典中。在 Python 中 set 和字典的效果一样，所以使用 set。
         遍历第二个链表，如果第二个链表的节点在字典中，那么这个节点就是公共节点。
         复杂度分析：
-        时间复杂度：O(max(m, n))
-        空间复杂度：O(min(m, n))，这里我们无法预先知道链表的长度，所以还是 O(max(m, n))
+        时间复杂度：O(m + n)，遍历第一个链表 O(m)，遍历第二个链表 O(n)，所以为 O(m + n)
+        空间复杂度：这里我们无法预先知道链表的长度，所以是 O(max(m, n))
 
         算法3：
         观察可以发现，公共节点是在链表的尾部。
@@ -34,18 +35,17 @@ class Solution:
         复杂度分析：
         时间复杂度：O(max(m, n))
         空间复杂度：O(m + n)
-        所以不如算法2。所以最优算法是算法2。
+        与算法2相比，时间、空间复杂度互换了。
         """
         if not pHead1 or not pHead2:
             return
-        set1 = set()
-        current1 = pHead1
-        while current1:
-            set1.add(current1)
-            current1 = current1.next
-        current2 = pHead2
-        while current2:
-            if current2 in set1:
-                return current2
-            current2 = current2.next
-        return
+        s = set()
+        while pHead1:
+            s.add(pHead1)
+            pHead1 = pHead1.next
+
+        while pHead2:
+            if pHead2 in s:
+                return pHead2
+            pHead2 = pHead2.next
+        return None
