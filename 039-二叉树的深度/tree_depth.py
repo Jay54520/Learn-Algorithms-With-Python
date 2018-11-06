@@ -20,13 +20,11 @@ class Solution:
 
         算法1：
         树的题目一般都与树的递归定义有关。树的深度 = max(左子树深度, 右子树深度) + 1
-        空子树的深度为 0。
+        空子树的深度为 0，这个为递归的 base。
         复杂度分析：
         时间复杂度：O(n)，没有分叉的树。
         空间复杂度：O(1)
         """
         if pRoot is None:
             return 0
-        if pRoot.left is None and pRoot.right is None:
-            return 1
         return max(self.TreeDepth(pRoot.left), self.TreeDepth(pRoot.right)) + 1
