@@ -11,6 +11,8 @@ class Solution:
 
         使用 and 运算符代替 if 执行判断。and 前面对应的布尔值为 True 就还会执行
         and 后面的语句，否则不会执行后面的语句。
+
+        所以算法是当 n >= 1 时继续调用函数。
         """
         self.sum(n)
         return self._sum
