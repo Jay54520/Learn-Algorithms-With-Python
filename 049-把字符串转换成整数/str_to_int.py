@@ -30,13 +30,14 @@ class Solution:
 
         negative = False
         digits = len(s)
+        start_index = 0
         if s[0] in ['+', '-']:
             digits -= 1
             if s[0] == '-':
                 negative = True
-            s = s[1:]
+            start_index = 1
 
-        for index, char in enumerate(s):
+        for index, char in enumerate(s[start_index:]):
             num += 10 ** (digits - 1 - index) * int(char)
         if negative:
             return 0 - num
