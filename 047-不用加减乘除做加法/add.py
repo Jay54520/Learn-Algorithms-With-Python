@@ -20,8 +20,8 @@ class Solution:
         Python 的二进制处理和其他语言不同，所以下面的代码不能 AC。
         """
         sum1 = num1 ^ num2
-        sum2 = num1 & num2
+        sum2 = (num1 & num2) << 1
         while sum2:
             sum1 = sum1 ^ sum2
-            sum2 = sum1 & sum2
+            sum2 = (sum1 & sum2) << 1
         return sum1
