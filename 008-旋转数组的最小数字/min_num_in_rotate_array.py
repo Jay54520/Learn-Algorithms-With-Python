@@ -10,16 +10,60 @@ class Solution:
 
         算法分析及证明
 
-        观察 [3,4,5,1,2] 可以发现，数组分为了两个非递减的子数组。假设数组旋转了 k(k>=0) 次，那么最大值的索引为 k - 1，
-        最小值的索引为 k 并且 array[:k] 和 array[k:] 为两个非递减数组，当 k = 0 时，这两个数组相同。
-        并且，旋转前的索引 = 旋转后的索引 % n - k（n 是数组的长度）。
+        观察 [3,4,5,1,2] 可以发现，数组分为了两个非递减的子数组 -- array[:k] 和 array[k:] 为两个非递减数组，当 k = 0(k % n == 0) 时，这两个数组相同。
 
-        如果我们以 p1、p2 分别指向第一和第二个数组，middle = (p1 + p2) / 2，如果 array[middle] >= array[p1]，
-        那么在原数组中 middle 对应的元素一定在 p1 对应的元素后面，所以 (p1 % n - k) 到 (middle % n - k) 是非递减的：
+        [2, 3, 4, 5, 1]
+        middle = (0 + 4) // 2 = 2
+        [2, 3, 4, 5, 1]
+         |     |      |
+         p1   middle  p2
+
+        因为 array[middle] > array[p1]，所以 [p1, middle] 在同一个非递减数组中。将 p1 指向 middle。
+
+        [2, 3, 4, 5, 1]
+               p1  m  p2
+
+        因为 array[middle] > array[p1]，所以 [p1, middle] 在同一个非递减数组中。将 p1 指向 middle。
+
+        [2, 3, 4, 5, 1]
+                  p1 p2
+
+        这时两者相邻。array[p1] > array[p2]，所以 p1、p2 分别是两个不同的非递减数组，所以 array[p2] 是最小值。
+
+        如果只有一个非递减数组，最后 p1、p2 会变成如下情况：
+
+        [1, 2, 3, 4, 5]
+                  p1 p2
+
+        array[p1] <= array[p2]，所以 p1、p2 在同一个非递减数组，与假设 p1、p2 分别指向两个非递减数组不同，这里以实际为准，
+        所以最小值是第一个元素。
+
+        最小值在左边，移动 p2。
+
+        [5, 1, 2, 3, 4]
+        p1 p2
+
+        array[p1] > array[p2]，array[p2] 还是最小值。
+
+        元素相同
+
+        [1, 1, 1]
+         p1 m  p2
+
+         [1, 1, 1]
+          p1 p2
+
+        array[p1] <= array[p2]，只有一个非递减数组，最小值是第一个元素
+
+        旋转前的索引 = 旋转后的索引 % n - k（n 是数组的长度）。
+        2 旋转前的索引是 1，旋转后的索引是 4, 1 == 4 - 3。
+
+        如果我们以 p1、p2 分别指向第一和第二个非递减数组，middle = (p1 + p2) / 2，如果 array[middle] > array[p1]，
+        那么在原数组中 (p1 % n - k) 到 (middle % n - k) 是非递减的，可以推出 [p1, middle] 也是非递减的，推理如下：
         array[p1 % n - k] <= array[p1 % n - k + 1] <= ... <= array[middle % n - 1] <= array[middle % n - k] =>
         array[p1 % n] <= array[p1 % n + 1] <= ... <= array[middle % n - 1] <= array[middle % n]  =>
         array[p1] <= array[p1 + 1] <= ... <= array[middle - 1] <= array[middle]
-        所以 p1 到 middle 也是非递减的，所以 middle 和 p1 都在第一个非递减数组中；否则，middle 位于第二个数组。
+        否则，middle 位于第二个数组。
 
         如果 middle 位于第一个数组，那么将 p1 指向 middle，否则将 p2 指向 middle。 就这样一直缩小 p1、p2 的差距，
         直到 p1、p2 相邻：
