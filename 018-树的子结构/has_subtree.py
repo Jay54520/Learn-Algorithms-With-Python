@@ -16,31 +16,20 @@ class Solution:
         因为空树不是任何树的子树，所以只要存在一个空树，那么返回 False。
         
         证明：
-        
+
+        因为空树不是任何树的子树，所以只要存在一个空树，那么返回 False。
+        证明如下：
         如果 root2 是空树，那么符合定义；
-        如果 root1 是空树，那么不可能存在 root2 是 root1 的空树，所以也是 False。
+        如果 root1 是空树，root2 不是空树，也是 False。
 
-        因为树的递归定义是 (L, S, R)，L、R 也是树，S 是一个节点。前序遍历 root1，然后判断遍历时的树是否与
-        root2 相等，如果相等，返回 True；如果遍历完也没有，那么返回 False。（这里令两棵树相同也算子树。）
-
-        复杂度分析：
-
-        令 root1、root2 分别有 m、n 个节点。
-
-        时间复杂度：遍历 root1，对每个 root1 节点最多要比较 n 次（只有最后一个节点的值不一样），所以为 O(mn)
-        空间复杂度：O(1)
-
-        算法1是错误的。没有考虑到 {123} 可以是 {1234} 的子树。
-
-        算法2：
-
-        因为空树不是任何树的子树，所以只要存在一个空树，那么返回 False。这个在上面已经证明了。
-
-        遍历 root1，判断 root2 是否为当前节点的子树，如果是，返回 True；遍历完成后还没有返回，说明没有找到，返回 False。
+        如果 root2 是 root1 的子树，由于子树的构造为 (左子树, 根节点, 右子树)，所以有以下三种情况：
+        root2 是 root1 当前节点的子树；证明见 current_tree_has_subtree 的注释
+        root2 是 root 左子树的子树；
+        root2 是 root1 右子树的子树;
 
         复杂度分析：
 
-        令 root1、root2 分别有 m、n 个节点。
+        令 root1、root2 分别有 m、n 个节点，并且只有最后一个遍历的值不相同。
 
         时间复杂度：遍历 root1，对每个 root1 节点最多要比较 n 次，所以为 O(mn)
         空间复杂度：O(1)
@@ -63,30 +52,17 @@ class Solution:
         """
         sub 是否是当前 parent 的子树。
 
-        循环条件：都不为空，两者根节点的值要相等，并且 sub 对应的子树也必须是 parent 对应子树的子树。
-
-        终止条件： parent 或 sub 为空。
-        如果都为空，返回 True；
-        否则：
-            如果只有 sub 为空，返回 True，说明在这里 sub 已经比完了；
-            只有 parent 为空，返回 False，说明这里 parent 比 sub 少；
-
+        两棵树所有对应位置都相等:
+        * sub 不为空，parent 对应位置必须要不为空并且值相等
+            * 两者对应子树也遵循这个关系
+            * 如果都遵循，则返回 True
+        * sub 为空，parent 可以为空或者不为空 -- 返回 True
         :param parent:
         :param sub:
         :return:
         """
-        if parent and sub:
-            if parent.val != sub.val:
-                return False
-            if not self.current_tree_has_subtree(parent.left, sub.left):
-                return False
-            if not self.current_tree_has_subtree(parent.right, sub.right):
-                return False
-        else:
-            if not parent and not sub:
-                return True
-            if parent and not sub:
-                return True
-            if not parent and sub:
-                return False
+        if sub:
+            if parent and parent.val == sub.val:
+                return self.current_tree_has_subtree(parent.left, sub.left) and self.current_tree_has_subtree(parent.right, sub.right)
+            return False
         return True
