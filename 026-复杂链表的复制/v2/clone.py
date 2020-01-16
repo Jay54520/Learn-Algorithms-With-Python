@@ -39,7 +39,7 @@ class Solution:
             old_n.random = old_random，则 old_random.next = new_random。
             否则，当 new_n.random 为 None 时，old_n.random 也为 None
 
-        根据第 2 点设置好新链表的 random，然后拆分得到完整的新链表：
+        根据第 2 点设置好新链表的 random：
 
         设置 random：
 
@@ -51,8 +51,8 @@ class Solution:
             拆分出新、旧链表。拆分出旧链表的原因是尽量不要改变函数的输入，并且
             牛客网的测试用例会根据输入来判断新链表是否引用了原链表。
 
-            将新链表的 next 改为指向新链表的节点而不是现在的旧链表的节点。
-            终止条件是 new_n.next = None
+            代码就是解释。
+            终止条件是 old_index is None
 
         复杂度分析：
         时间复杂度：O(n)
@@ -67,43 +67,28 @@ class Solution:
         if not pHead:
             return None
 
-        # ------------插入新节点------------
-        old_cur = pHead  # type: RandomListNode
-        while old_cur:
-            new_node = RandomListNode(old_cur.label)
-            next = old_cur.next
-            old_cur.next = new_node
-            new_node.next = next
-            old_cur = next
-        # ------------插入新节点------------
+        # insert new next to old
+        old_index = pHead
+        while old_index:
+            new = RandomListNode(old_index.label)
+            old_index.next, new.next = new, old_index.next
+            old_index = new.next
 
-        # ------------设置新链表的 random------------        
-        old_cur = pHead  # type: RandomListNode
-        while old_cur:
-            new_node = old_cur.next
-            old_random = old_cur.random
-            if old_random:
-                new_random = old_random.next
-            else:
-                new_random = None
-            new_node.random = new_random
-            old_cur = new_node.next
-        # ------------设置新链表的 random------------
+        # insert random
+        old_index = pHead
+        while old_index:
+            if old_index.random:
+                new = old_index.next
+                new.random = old_index.random.next
+            old_index = old_index.next.next
 
-        # ------------拆分得到新链表------------
+        # split new and restore old
         new_head = pHead.next
-
-        old_cur = pHead
-        new_cur = new_head
-        while new_cur.next:
-            old_cur.next = new_cur.next
-            new_cur.next = new_cur.next.next
-
-            old_cur = old_cur.next
-            new_cur = new_cur.next
-
-        # 将旧链表的最后一个由 new_cur 变为 None，至此旧链表（输入）完全恢复
-        old_cur.next = None
-        # ------------拆分得到新链表------------
-
+        old_index = pHead
+        while old_index:
+            new_index = old_index.next
+            next_old_index = new_index.next
+            next_new_index = next_old_index.next if next_old_index else None
+            old_index.next, new_index.next = new_index.next, next_new_index
+            old_index = next_old_index
         return new_head
